@@ -166,13 +166,6 @@ residentNHVE_clean <- residentNHVE_clean %>%
 #remove the last 3 columns 
 residentNHVE_clean <- residentNHVE_clean %>% select(1:34)
 
-###temp copy of residentdatacrd with normal PID
-# setwd("C:/Users/OrielTsao/Desktop")
-# 
-# write.xlsx(residentdatacrd_clean,
-#            file = "residentdatacrd_clean.xlsx",
-#            colNames = TRUE,
-#            rowNames = FALSE)
 
 ##EVAXADD2
 combconv_sid <- function(df) {
@@ -484,7 +477,7 @@ combined_R2.1 %>%
 sum(duplicated(combined_R2.1[[id_var]]))
 
 
-
+#####################################
 ## Further processing of combined_R2.1_1 PID and name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
 
@@ -753,6 +746,7 @@ combined_R2.2 %>%
 
 sum(duplicated(combined_R2.2[[id_var]]))
 
+#####################################
 ## Further processing of combined_R2.2_2 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
 setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
@@ -857,7 +851,7 @@ combined_R2_Res_1 %>%
   count(PID) %>%     # count how many times each PID appears
   count(n)           # count how many PIDs have n duplicates
 
-
+#####################################
 ## Further processing of combined_R2 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
 setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
@@ -1069,6 +1063,7 @@ combined_R3 %>%
 
 sum(duplicated(combined_R3[[id_var]]))
 
+#####################################
 ## Further processing of combined_R3 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
 setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R3")
