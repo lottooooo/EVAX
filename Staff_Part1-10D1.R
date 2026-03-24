@@ -722,7 +722,7 @@ rm(list=ls())
 #####################################
 root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 all_rounds_staff <- file.path(root, "1_clean/all_rounds/staff")
-p10d_staff       <- file.path(root, "part10/10d/staff")
+p10d_staff       <- file.path(root, "part10/Part10D1/staff")
 
 ## 1. Read R1-R3 clean staff files
 R1_raw <- read_excel(file.path(all_rounds_staff, "combined_R1_Staf_3.xlsx"), col_names = TRUE)
@@ -919,7 +919,7 @@ rm(list=ls())
 
 ## Part 10D1: Cross-Round FINAL Master Dataset Construction
 root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
-p10d_staff   <- file.path(root, "part10/10d/staff")
+p10d_staff   <- file.path(root, "part10/Part10D1/staff")
 summary_docs <- file.path(root, "Summary docs")
 
 ## 1. Read files
