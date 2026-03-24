@@ -1,3 +1,24 @@
+#############
+#PRINTING - line number
+root    <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+scripts <- file.path(root, "scripts")
+
+lines <- readLines(file.path(scripts, "RCHE_Part1-10.R"))
+numbered <- paste(sprintf("%3d", seq_along(lines)), lines, sep = "  ")
+cat(numbered, sep = "\n")
+
+# Wrap in HTML with a monospace font
+html_content <- paste0(
+  "<html><head><style>",
+  "body { font-family: monospace; font-size: 12pt; white-space: pre; }",
+  "</style></head><body>",
+  paste(htmltools::htmlEscape(numbered), collapse = "\n"),
+  "</body></html>"
+)
+
+writeLines(html_content, file.path(scripts, "RCHE_Part1-10.R.html"))
+###########
+
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
 
@@ -8,129 +29,113 @@ library(stringr)
 library(purrr)
 library(openxlsx)
 
+################################################################################
 ##ROUND 1 ###
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
 
-## 1. Read the R1 survey files (keep statement1 as col names)
-##Qualtrics
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R1/Qualtric Download/20251124_missingentered")
+root            <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+r1_qualtrics    <- file.path(root, "0_raw/R1/qualtrics")
+r1_other        <- file.path(root, "0_raw/R1/other")
+all_rounds_rche <- file.path(root, "1_clean/all_rounds/rche")
 
-INSMAIN_raw <- read_excel("EVAX_INSMAIN_TEXT_finalvar.xlsx", col_names = FALSE)
-
-# ##Others Cyrus dataset
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R1/Other datasets")
-
-RCHE_raw <- read_excel("EVAX_RCHE.xlsx", col_names = TRUE)
+## 1. Read the R1 survey files
+INSMAIN_raw <- read_excel(file.path(r1_qualtrics, "EVAX_INSMAIN_TEXT_finalvar.xlsx"), col_names = FALSE)
+RCHE_raw    <- read_excel(file.path(r1_other,     "EVAX_RCHE.xlsx"),                  col_names = TRUE)
 
 ## 2. Correct to desired colnames as header
-#A. Qualtrics Remove statement2 from header
-#col_names = TRUE
+# INSMAIN: col_names = FALSE, rows 1-2 are header rows, row 1 of data is final var
 rm_stat2 <- function(df) {
-  df_wostat2 <- df[-(1:2), ] #df[1,] is statement 2, statement 1 is colname
-  df_wostat2
+  df[-(1:2), ]
 }
 
 INSMAIN_clean <- rm_stat2(INSMAIN_raw)
 
 header_row2 <- function(df) {
-  # 1. Set row 3 as column names
   colnames(df) <- as.character(unlist(df[1, ]))
-  # 2. Remove rows 1 to 3
   df <- df[-(1:2), ]
   return(df)
 }
 
 INSMAIN_clean <- header_row2(INSMAIN_clean)
 
-##3 Prep 1 to join surveys within Round: convert everything to character 
-#if error: names(resident3_clean)[duplicated(names(resident3_clean))]
+## 3. Prep 1: convert everything to character
 INSMAIN_clean <- INSMAIN_clean %>% mutate(across(everything(), as.character))
-RCHE_clean <-RCHE_raw %>% mutate(across(everything(), as.character))
+RCHE_clean    <- RCHE_raw      %>% mutate(across(everything(), as.character))
 
-
-
-##4 Prep 3: make sure core joining variable are the same
-##Make sure RCHEID is in RCHEID col and formate "EXXX"
+## 4. Prep 2: ensure RCHEID is in format "EXXX"
 fullRCHEID <- function(df) {
-  df$RCHEID <- paste0("E",df$RCHEID)
+  df$RCHEID <- paste0("E", df$RCHEID)
   return(df)
 }
 
 INSMAIN_clean <- fullRCHEID(INSMAIN_clean)
-RCHE_clean <- fullRCHEID(RCHE_clean)
+RCHE_clean    <- fullRCHEID(RCHE_clean)
 
-
-##5 Prep 4: prefix all final var names with dataset origin
-## except for the core variable so we can still join by ID and other vars correctly
+## 5. Prep 3: prefix all final var names with dataset origin
 RCHEID <- "RCHEID"
 
 INSMAIN_clean <- INSMAIN_clean %>%
-  rename_with(~ paste0("RCHEINSMAIN.", .x), .cols = -all_of(c(RCHEID)))
+  rename_with(~ paste0("RCHEINSMAIN.", .x), .cols = -all_of(RCHEID))
 
 RCHE_clean <- RCHE_clean %>%
-  rename_with(~ paste0("RCHEBasic.", .x), .cols = -all_of(c(RCHEID)))
+  rename_with(~ paste0("RCHEBasic.", .x), .cols = -all_of(RCHEID))
 
-#6 Join surveys within R1 (full join) by PID
-# full join keeps everyone in the surveys
+## 6. Join within R1 (full join) by RCHEID
 combined_R1_RCHE_1 <- INSMAIN_clean %>%
-  full_join(RCHE_clean, by = c(RCHEID))
-
+  full_join(RCHE_clean, by = RCHEID)
 
 combined_R1_RCHE_1$round <- 1
 
-##7 Sort by RCHEID
+## 7. Sort by RCHEID
 combined_R1_RCHE_1 <- combined_R1_RCHE_1 %>%
   arrange(.data[[RCHEID]])
 
-##8. Reorder colnames to round, RCHEID, PID, name_CHI
+## 8. Reorder colnames to round, RCHEID
 combined_R1_RCHE_1 <- combined_R1_RCHE_1 %>%
   select(round, RCHEID, everything())
 
-
-##save combined_R1_RCHE into excel
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R1")
-write.xlsx(combined_R1_RCHE_1, 
-           file = "combined_R1_RCHE_1.xlsx",
+## save combined_R1_RCHE_1 into excel
+write.xlsx(combined_R1_RCHE_1,
+           file     = file.path(all_rounds_rche, "combined_R1_RCHE_1.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
-##QC # make sure there's no duplicate RCHEID
+##QC - no duplicate RCHEID
 combined_R1_RCHE_1 %>%
-  count(RCHEID) %>%     # count how many times each PID appears
-  count(n)           # count how many PIDs have n duplicates
+  count(RCHEID) %>%
+  count(n)
 
 sum(duplicated(combined_R1_RCHE_1[[RCHEID]]))
-
 unique(combined_R1_RCHE_1$RCHEID[duplicated(combined_R1_RCHE_1$RCHEID)])
 
-###################################################################################################
-
+################################################################################
 ##ROUND 2.2 ###
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
 
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R2/R2 and R3_Qualtric Download/20251124_withfinalvarname")
+root            <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+r2.2_qualtrics  <- file.path(root, "0_raw/R2/R2.2_qualtrics")
+all_rounds_rche <- file.path(root, "1_clean/all_rounds/rche")
 
-## 1. Read the R2 survey files (no col names, because first 3 rows are special)
-RCHE_raw <- read_excel("RCHE_finalvar.xlsx", col_names = FALSE)
+## 1. Read the survey file (no col names, first 3 rows are special)
+## Note: R2.2 and R3 both use RCHE_finalvar.xlsx - filtered by round below
+RCHE_raw <- read_excel(file.path(r2.2_qualtrics, "RCHE_finalvar.xlsx"), col_names = FALSE)
 
-
-## 2. Pull out the 3 header rows from a Qualtrics file to be reconstructed later
+## 2. Pull out the 3 header rows
 get_header <- function(df) {
   list(
-    stmt1 = as.character(df[1, ]),  # row 1: old var name
-    stmt2 = as.character(df[2, ]),  # row 2: question text
-    finalvar = as.character(df[3, ])   # row 3: final var name
+    stmt1    = as.character(df[1, ]),
+    stmt2    = as.character(df[2, ]),
+    finalvar = as.character(df[3, ])
   )
 }
 
 RCHE_header <- get_header(RCHE_raw)
 
-
-##3. Only keep and set data colnames to statement 1 for cleaning participant data
+## 3. Set data colnames to final var
 clean_pdata <- function(df) {
-  finalvar <- as.character(df[3,])
+  finalvar    <- as.character(df[3, ])
   df_woheader <- df[-(1:3), ]
   names(df_woheader) <- finalvar
   df_woheader
@@ -138,74 +143,66 @@ clean_pdata <- function(df) {
 
 RCHE_clean <- clean_pdata(RCHE_raw)
 
-##4 Prep 1 to join surveys within Round: convert everything to character 
-#if error: names(RCHE_clean)[duplicated(names(RCHE_clean))]
+## 4. Prep 1: convert everything to character
 RCHE_clean <- RCHE_clean %>% mutate(across(everything(), as.character))
 
-
-## 4A. Include only Round 2 Participants
+## 4A. Include only Round 2 participants
 R2_RCHE_clean <- RCHE_clean %>% filter(round == '2')
 
-
-
-##5 Prep 3: prefix all final var names with dataset origin
-## except for the core variable so we can still join by ID and other vars correctly
-RCHEID <- "RCHEID"
-round <- "round"
-
-#list of all var with no prefix
+## 5. Prep 2: prefix all final var names with dataset origin
+RCHEID       <- "RCHEID"
+round        <- "round"
 noprefix_var <- c(round, RCHEID)
 
 combined_R2_RCHE_1 <- R2_RCHE_clean %>%
   rename_with(~ paste0("R2RCHE.", .x), .cols = -all_of(noprefix_var))
 
-##7 Sort by ID
+## 6. Sort by RCHEID
 combined_R2_RCHE_1 <- combined_R2_RCHE_1 %>%
   arrange(.data[[RCHEID]])
 
-##8 Reorder colnames to round, RCHEID, PID, name_CHI
+## 7. Reorder colnames to round, RCHEID
 combined_R2_RCHE_1 <- combined_R2_RCHE_1 %>%
   select(round, RCHEID, everything())
 
-##save combined_R2.2 into excel
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
-write.xlsx(combined_R2_RCHE_1, 
-           file = "combined_R2.2_RCHE_1.xlsx",
+## save combined_R2.2_RCHE_1 into excel
+write.xlsx(combined_R2_RCHE_1,
+           file     = file.path(all_rounds_rche, "combined_R2.2_RCHE_1.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
 ##QC
 combined_R2_RCHE_1 %>%
-  count(RCHEID) %>%     # count how many times each PID appears
-  count(n)           # count how many PIDs have n duplicates
+  count(RCHEID) %>%
+  count(n)
 
-#END
-
-###################################################################################################
+################################################################################
 ##ROUND 3 ###
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R2/R2 and R3_Qualtric Download/20251124_withfinalvarname")
 
-## 1. Read the R2 survey files (no col names, because first 3 rows are special)
-RCHE_raw <- read_excel("RCHE_finalvar.xlsx", col_names = FALSE)
+root            <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+r2.2_qualtrics  <- file.path(root, "0_raw/R2/R2.2_qualtrics") # same raw file as R2.2
+all_rounds_rche <- file.path(root, "1_clean/all_rounds/rche")
 
+## 1. Read the survey file (no col names, first 3 rows are special)
+## Note: R2.2 and R3 both use RCHE_finalvar.xlsx - filtered by round below
+RCHE_raw <- read_excel(file.path(r2.2_qualtrics, "RCHE_finalvar.xlsx"), col_names = FALSE)
 
-## 2. Pull out the 3 header rows from a Qualtrics file to be reconstructed later
+## 2. Pull out the 3 header rows
 get_header <- function(df) {
   list(
-    stmt1 = as.character(df[1, ]),  # row 1: old var name
-    stmt2 = as.character(df[2, ]),  # row 2: question text
-    finalvar = as.character(df[3, ])   # row 3: final var name
+    stmt1    = as.character(df[1, ]),
+    stmt2    = as.character(df[2, ]),
+    finalvar = as.character(df[3, ])
   )
 }
 
 RCHE_header <- get_header(RCHE_raw)
 
-
-##3. Only keep and set data colnames to statement 1 for cleaning participant data
+## 3. Set data colnames to final var
 clean_pdata <- function(df) {
-  finalvar <- as.character(df[3,])
+  finalvar    <- as.character(df[3, ])
   df_woheader <- df[-(1:3), ]
   names(df_woheader) <- finalvar
   df_woheader
@@ -213,104 +210,89 @@ clean_pdata <- function(df) {
 
 RCHE_clean <- clean_pdata(RCHE_raw)
 
-##4 Prep 1 to join surveys within Round: convert everything to character 
-#if error: names(RCHE_clean)[duplicated(names(RCHE_clean))]
+## 4. Prep 1: convert everything to character
 RCHE_clean <- RCHE_clean %>% mutate(across(everything(), as.character))
 
-
-## 4A. Include only Round 2 Participants
+## 4A. Include only Round 3 participants
 R3_RCHE_clean <- RCHE_clean %>% filter(round == '3')
 
-
-
-##5 Prep 3: prefix all final var names with dataset origin
-## except for the core variable so we can still join by ID and other vars correctly
-RCHEID <- "RCHEID"
-round <- "round"
-
-#list of all var with no prefix
+## 5. Prep 2: prefix all final var names with dataset origin
+RCHEID       <- "RCHEID"
+round        <- "round"
 noprefix_var <- c(round, RCHEID)
 
 combined_R3_RCHE_1 <- R3_RCHE_clean %>%
   rename_with(~ paste0("R3RCHE.", .x), .cols = -all_of(noprefix_var))
 
-##7 Sort by ID
+## 6. Sort by RCHEID
 combined_R3_RCHE_1 <- combined_R3_RCHE_1 %>%
   arrange(.data[[RCHEID]])
 
-##8 Reorder colnames to round, RCHEID, PID, name_CHI
+## 7. Reorder colnames to round, RCHEID
 combined_R3_RCHE_1 <- combined_R3_RCHE_1 %>%
   select(round, RCHEID, everything())
 
-##save combined_R2.2 into excel
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R3")
-write.xlsx(combined_R3_RCHE_1, 
-           file = "combined_R3_RCHE_1.xlsx",
+## save combined_R3_RCHE_1 into excel
+write.xlsx(combined_R3_RCHE_1,
+           file     = file.path(all_rounds_rche, "combined_R3_RCHE_1.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
 ##QC
 combined_R3_RCHE_1 %>%
-  count(RCHEID) %>%     # count how many times each PID appears
-  count(n)           # count how many PIDs have n duplicates
+  count(RCHEID) %>%
+  count(n)
 
 #END OF PART 1-9
 ################################################################################
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
 
-###PART 10D ALL ROUND joining combined_R1 to R3 ### (Prep for Part 10e Phase 2)
+###PART 10D1: ALL ROUND joining combined_R1 to R3###
+root            <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+all_rounds_rche <- file.path(root, "1_clean/all_rounds/rche")
+p10d_rche       <- file.path(root, "part10/10d/rche")
 
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/10d/ALL ROUNDS/RCHE")
+## 1. Read R1-R3 clean RCHE files
+R1_raw <- read_excel(file.path(all_rounds_rche, "combined_R1_RCHE_1.xlsx"),   col_names = TRUE)
+R2_raw <- read_excel(file.path(all_rounds_rche, "combined_R2.2_RCHE_1.xlsx"), col_names = TRUE)
+R3_raw <- read_excel(file.path(all_rounds_rche, "combined_R3_RCHE_1.xlsx"),   col_names = TRUE)
 
-## 1. Read the R2 survey files (no col names, because first 3 rows are special)
-R1_raw <- read_excel("combined_R1_RCHE_1.xlsx", col_names = T)
-R2_raw <- read_excel("combined_R2.2_RCHE_1.xlsx", col_names = T)
-R3_raw <- read_excel("combined_R3_RCHE_1.xlsx", col_names = T)
-
-## 1. Read the R2 survey files (no col names, because first 3 rows are special)
+## 2. Convert everything to character
 R1_clean <- R1_raw %>% mutate(across(everything(), as.character))
 R2_clean <- R2_raw %>% mutate(across(everything(), as.character))
 R3_clean <- R3_raw %>% mutate(across(everything(), as.character))
 
-##2.  Prep 2 to join survey within Round: set participant ID and merge name_CHI
-round <- "round"
+## 3. Set ID variables
+round  <- "round"
 RCHEID <- "RCHEID"
-unique_RCHEID <- "unique_RCHEID"
 
-##7 Join surveys within R2 (full join) by PID
-#full join keeps everyone in the surveys
+## 4. Join all rounds (full join) by round and RCHEID
 ALLRound <- R1_clean %>%
   full_join(R2_clean, by = c(round, RCHEID)) %>%
-  full_join(R3_clean, by = c(round, RCHEID)) 
+  full_join(R3_clean, by = c(round, RCHEID))
 
-###make sure new/old RCHEID is the same RCHEID in unique_RCHEID
-#df$col[df$col == "old"] <- "new"
-
+## 5. Create unique_RCHEID to map old RCHEID codes to new ones
 ALLRound$unique_RCHEID <- ALLRound$RCHEID
 
-###list of RCHEID with old and new
 ALLRound$unique_RCHEID[ALLRound$unique_RCHEID == "E201"] <- "E947"
 ALLRound$unique_RCHEID[ALLRound$unique_RCHEID == "E003"] <- "E948"
 ALLRound$unique_RCHEID[ALLRound$unique_RCHEID == "E005"] <- "E961"
 
-##8 Sort by ID
-ALLRound <- ALLRound %>% 
+unique_RCHEID <- "unique_RCHEID"
+
+## 6. Sort by unique_RCHEID, RCHEID, round
+ALLRound <- ALLRound %>%
   arrange(.data[[unique_RCHEID]], RCHEID, round)
 
-##9. Reorder colnames to round, RCHEID, PID, name_CHI
+## 7. Reorder colnames to round, RCHEID, unique_RCHEID
 ALLRound <- ALLRound %>%
   select(round, RCHEID, unique_RCHEID, everything())
 
-##save combined_R2.2 into excel
-
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/10d/ALL ROUNDS/RCHE")
-
-write.xlsx(ALLRound, 
-           file = "RCHE_ALLRound.xlsx",
+## save RCHE_ALLRound into excel
+write.xlsx(ALLRound,
+           file     = file.path(p10d_rche, "RCHE_ALLRound.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
 #END of Part 10D
-###################################################################################
-####################################################################################
