@@ -559,62 +559,62 @@ residentMC_raw <- read_excel("ResidentMC_finalvar.xlsx", col_names = FALSE)
 #E001-1-031
 idx <- which(resident5_raw$`...20` == "E001-1-031" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1945" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "12" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "20" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "12" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "20" # `...32` = dob_dd
 
 #E917-1-010
 idx <- which(resident5_raw$`...20` == "E917-1-010" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1958" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "02" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "02" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "02" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "02" # `...32` = dob_dd
 
 #E923-1-037
 idx <- which(resident5_raw$`...20` == "E923-1-037" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1951" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "10" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "10" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "10" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "10" # `...32` = dob_dd
 
 #E929-1-014
 idx <- which(resident5_raw$`...20` == "E929-1-014" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1950" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "11" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "21" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "11" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "21" # `...32` = dob_dd
 
 #E929-1-021
 idx <- which(resident5_raw$`...20` == "E929-1-021" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1950" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "06" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "12" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "06" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "12" # `...32` = dob_dd
 
 #E929-1-023
 idx <- which(resident5_raw$`...20` == "E929-1-023" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1959" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "07" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "13" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "07" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "13" # `...32` = dob_dd
 
 #E936-1-016
 idx <- which(resident5_raw$`...20` == "E936-1-016" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1925" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "10" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "25" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "10" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "25" # `...32` = dob_dd
 
 #E936-1-037
 idx <- which(resident5_raw$`...20` == "E936-1-037" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1961" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "07" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "11" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "07" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "11" # `...32` = dob_dd
 
 #E947-1-003
 idx <- which(resident5_raw$`...20` == "E947-1-003" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1954" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "04" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "08" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "04" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "08" # `...32` = dob_dd
 
 #E950-1-002
 idx <- which(resident5_raw$`...20` == "E950-1-002" & resident5_raw$`...18` == 2) #`...20` = PID, `...18` = round
 resident5_raw$`...30`[idx] <- "1954" # `...30` = dob_yyyy
-resident5_raw$`...30`[idx] <- "03" # `...30` = dob_mm
-resident5_raw$`...30`[idx] <- "26" # `...30` = dob_dd
+resident5_raw$`...31`[idx] <- "03" # `...31` = dob_mm
+resident5_raw$`...32`[idx] <- "26" # `...32` = dob_dd
 
 #####################################
 #### Part 6.  Combine datasets within the same round in wide form
