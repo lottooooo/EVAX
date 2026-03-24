@@ -1,7 +1,9 @@
 #############
 #PRINTING - line number
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/2. R scripts")
-lines <- readLines("Resident_Part1-9.R")
+root    <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
+scripts <- file.path(root, "scripts")
+
+lines <- readLines(file.path(scripts, "Resident_Part1-9.R"))
 numbered <- paste(sprintf("%3d", seq_along(lines)), lines, sep = "  ")
 cat(numbered, sep = "\n")
 
@@ -13,8 +15,7 @@ html_content <- paste0(
   paste(htmltools::htmlEscape(numbered), collapse = "\n"),
   "</body></html>"
 )
-
-writeLines(html_content, "Resident_Part1-9.R.html")
+writeLines(html_content, file.path(scripts, "Resident_Part1-9.R.html"))
 ###########
 
 root <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
