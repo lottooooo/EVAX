@@ -997,7 +997,7 @@ root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 p10c         <- file.path(root, "part10/10c")
 r2_clean     <- file.path(root, "1_clean/R2")
 r3_clean     <- file.path(root, "1_clean/R3")
-p10d_res     <- file.path(root, "part10/10d/resident")
+p10d_res     <- file.path(root, "part10/Part10D1/resident")
 summary_docs <- file.path(root, "Summary docs")
 
 ## 1. Read files directly from where they are saved
