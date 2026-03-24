@@ -17,6 +17,8 @@ html_content <- paste0(
 writeLines(html_content, "Resident_Part1-9.R.html")
 ###########
 
+root <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
+
 #####################################
 #### Part 1.  Coding consensus
 #####################################
@@ -52,25 +54,25 @@ rm(list=ls())
 
 ## 1. Read the R1 survey files (keep statement1 as col names)
 ##Qualtrics
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R1/Qualtric Download/20251124_missingentered")
+r1_qualtrics <- file.path(root, "0_raw/R1/qualtrics")
 
-residentINS_raw<- read_excel("EVAX_Institution.xlsx", col_names = TRUE)
-residentMAINIADL_raw <- read_excel("EVAX_Main_IADL.xlsx", col_names = TRUE)
-residentVISVH_raw <- read_excel("EVAX_VIS_VH.xlsx", col_names = TRUE)
-residentMC_raw <- read_excel("EVAX_MiniCog.xlsx", col_names = TRUE)
+residentINS_raw <- read_excel(file.path(r1_qualtrics, "EVAX_Institution.xlsx"), col_names = TRUE)
+residentMAINIADL_raw <- read_excel(file.path(r1_qualtrics, "EVAX_Main_IADL.xlsx"), col_names = TRUE)
+residentVISVH_raw  <- read_excel(file.path(r1_qualtrics, "EVAX_VIS_VH.xlsx"), col_names = TRUE)
+residentMC_raw  <- read_excel(file.path(r1_qualtrics, "EVAX_MiniCog.xlsx"), col_names = TRUE)
 
 ##SurveyMonkey
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R1/SurveyMonkey")
+r1_surveymonkey <- file.path(root, "0_raw/R1/surveymonkey")
 
-residentSM_raw <- read_excel("EVAX_SMTEXT.xlsx", col_names = FALSE)
+residentSM_raw <- read_excel(file.path(r1_surveymonkey, "EVAX_SMTEXT.xlsx"), col_names = FALSE)
 
 ##Others Cyrus dataset
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R1/Other datasets")
+r1_other <- file.path(root, "0_raw/R1/other")
 
-residentdatacrd_raw <- read.csv("data_crd copy.csv", header = FALSE)
-residentADD2_raw <- read_excel("EVAXADD2.xlsx", col_names = FALSE)
-residentMINI_raw <- read_excel("MINI_Resident_dated20221228.xlsx", col_names = FALSE)
-residentNHVE_raw <- read_excel("NHVE_fu_230705.xlsx", col_names = TRUE)
+residentdatacrd_raw <- read.csv(file.path(r1_other, "data_crd copy.csv"), header = FALSE)
+residentADD2_raw  <- read_excel(file.path(r1_other, "EVAXADD2.xlsx"), col_names = FALSE)
+residentMINI_raw <- read_excel(file.path(r1_other, "MINI_Resident_dated20221228.xlsx"), col_names = FALSE)
+residentNHVE_raw <- read_excel(file.path(r1_other, "NHVE_fu_230705.xlsx"), col_names = TRUE)
 
 #####################################
 #### Part 5. Correct raw data according to error repot
@@ -308,9 +310,9 @@ combined_R1_Res_1 <- combined_R1_Res_1 %>%
 
 
 ##save combined_R1 into excel
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R1")
-write.xlsx(combined_R1_Res_1, 
-           file = "combined_R1_Res_1.xlsx",
+r1_clean <- file.path(root, "1_clean/R1")
+write.xlsx(combined_R1_Res_1,
+           file = file.path(r1_clean, "combined_R1_Res_1.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
@@ -327,9 +329,10 @@ unique(combined_R1_Res_1$PID[duplicated(combined_R1_Res_1$PID)])
 ## Further processing of combined_R1_2 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
 rm(list=ls())
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R1")
+root <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
+r1_clean <- file.path(root, "1_clean/R1")
 
-combined_R1_Res_2 <- read_excel("combined_R1_Res_2.xlsx", col_names = TRUE)
+combined_R1_Res_2 <- read_excel(file.path(r1_clean, "combined_R1_Res_2.xlsx"), col_names = TRUE)
 
 ## 1. Convert everything to character
 combined_R1_Res_2 <- combined_R1_Res_2 %>%
@@ -363,12 +366,10 @@ combined_R1_Res_3 <- combined_R1_Res_3 %>%
   select(round, RCHEID, PID, final_name_CHI, everything())
 
 ##save combined_R1 into excel
-write.xlsx(combined_R1_Res_3, 
-           file = "combined_R1_Res_3.xlsx",
+write.xlsx(combined_R1_Res_3,
+           file = file.path(r1_clean, "combined_R1_Res_3.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
-
-
 
 #############################################################################################
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
@@ -384,11 +385,12 @@ rm(list=ls())
 #### Part 4. Load raw data, error repot, and all needed files
 #####################################
 
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R2/R2.1 only_Qualtric Download/20251124_finalvar")
+root          <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
+r2.1_qualtrics <- file.path(root, "0_raw/R2/R2.1_qualtrics")
 
-## 1. Read the R2 survey files (no col names, because first 3 rows are special)
-residenttopup_raw <- read_excel("R2.1_Resident_topup_finalvar.xlsx", col_names = FALSE)
-residentmental_raw <- read_excel("R2.1_Resident_mental_finalvar.xlsx", col_names = FALSE)
+## 1. Read the R2.1 survey files (no col names, because first 3 rows are special)
+residenttopup_raw  <- read_excel(file.path(r2.1_qualtrics, "R2.1_Resident_topup_finalvar.xlsx"), col_names = FALSE)
+residentmental_raw <- read_excel(file.path(r2.1_qualtrics, "R2.1_Resident_mental_finalvar.xlsx"), col_names = FALSE)
 
 ## 2. Pull out the 3 header rows from a Qualtrics file to be reconstructed later
 get_header <- function(df) {
@@ -472,11 +474,12 @@ combined_R2.1 <- combined_R2.1 %>%
 combined_R2.1 <- combined_R2.1 %>%
   select(RCHEID, PID, name_CHI, everything())
 
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
 
-##save combined_R2.2 into excel
-write.xlsx(combined_R2.1, 
-           file = "combined_R2.1_Res_1.xlsx",
+
+##save combined_R2.1 into excel
+r2_clean <- file.path(root, "1_clean/R2")
+write.xlsx(combined_R2.1,
+           file = file.path(r2_clean, "combined_R2.1_Res_1.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
@@ -492,8 +495,7 @@ sum(duplicated(combined_R2.1[[id_var]]))
 ## Further processing of combined_R2.1_1 PID and name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
 
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
-combined_R2.1_2 <- read_excel("combined_R2.1_Res_2.xlsx", col_names = TRUE)
+combined_R2.1_2 <- read_excel(file.path(r2_clean, "combined_R2.1_Res_2.xlsx"), col_names = TRUE)
 
 ## 1. Convert everything to character
 combined_R2.1_2 <- combined_R2.1_2 %>%
@@ -519,10 +521,9 @@ combined_R2.1_3$round <- 2
 combined_R2.1_3 <- combined_R2.1_3 %>%
   select(round, RCHEID, PID, final_name_CHI, everything())
 
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
 ##save combined_R2.1 into excel
-write.xlsx(combined_R2.1_3, 
-           file = "combined_R2.1_Res_3.xlsx",
+write.xlsx(combined_R2.1_3,
+           file = file.path(r2_clean, "combined_R2.1_Res_3.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
@@ -540,16 +541,18 @@ rm(list=ls())
 #####################################
 #### Part 4. Load raw data, error repot, and all needed files
 #####################################
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R2/R2 and R3_Qualtric Download/20251124_withfinalvarname")
+root            <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
+r2.2_qualtrics  <- file.path(root, "0_raw/R2/R2.2_qualtrics")
+r2_clean        <- file.path(root, "1_clean/R2")
 
-## Read the R2 survey files (no col names, because first 3 rows are special)
-resident1_raw <- read_excel("Resident1_finalvar.xlsx", col_names = FALSE)
-resident2_raw <- read_excel("Resident2_finalvar.xlsx", col_names = FALSE)
-resident3_raw <- read_excel("Resident3_finalvar.xlsx", col_names = FALSE)
-resident4_raw <- read_excel("Resident4_finalvar.xlsx", col_names = FALSE)
-resident5_raw <- read_excel("Resident5_finalvar.xlsx", col_names = FALSE)
-resident6_raw <- read_excel("Resident6_finalvar.xlsx", col_names = FALSE)
-residentMC_raw <- read_excel("ResidentMC_finalvar.xlsx", col_names = FALSE)
+## Read the R2.2 survey files (no col names, because first 3 rows are special)
+resident1_raw  <- read_excel(file.path(r2.2_qualtrics, "Resident1_finalvar.xlsx"), col_names = FALSE)
+resident2_raw  <- read_excel(file.path(r2.2_qualtrics, "Resident2_finalvar.xlsx"), col_names = FALSE)
+resident3_raw  <- read_excel(file.path(r2.2_qualtrics, "Resident3_finalvar.xlsx"), col_names = FALSE)
+resident4_raw  <- read_excel(file.path(r2.2_qualtrics, "Resident4_finalvar.xlsx"), col_names = FALSE)
+resident5_raw  <- read_excel(file.path(r2.2_qualtrics, "Resident5_finalvar.xlsx"), col_names = FALSE)
+resident6_raw  <- read_excel(file.path(r2.2_qualtrics, "Resident6_finalvar.xlsx"), col_names = FALSE)
+residentMC_raw <- read_excel(file.path(r2.2_qualtrics, "ResidentMC_finalvar.xlsx"), col_names = FALSE)ALSE)
 
 #####################################
 #### Part 5. Correct raw data according to error repot
@@ -733,13 +736,10 @@ combined_R2.2 <- combined_R2.2 %>%
   select(round, RCHEID, PID, name_CHI, everything())
 
 ##save combined_R2.2 into excel
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
-
-write.xlsx(combined_R2.2, 
-           file = "combined_R2.2_Res_1.xlsx",
+write.xlsx(combined_R2.2,
+           file = file.path(r2_clean, "combined_R2.2_Res_1.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
-
 ##QC
 combined_R2.2 %>%
   count(PID) %>%     # count how many times each PID appears
@@ -750,8 +750,7 @@ sum(duplicated(combined_R2.2[[id_var]]))
 #####################################
 ## Further processing of combined_R2.2_2 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
-combined_R2.2_2 <- read_excel("combined_R2.2_Res_2.xlsx", col_names = TRUE)
+combined_R2.2_2 <- read_excel(file.path(r2_clean, "combined_R2.2_Res_2.xlsx"), col_names = TRUE)
 
 ## 1. Convert everything to character
 combined_R2.2_2 <- combined_R2.2_2 %>%
@@ -775,8 +774,8 @@ combined_R2.2_3 <- combined_R2.2_3 %>%
   select(round, RCHEID, PID, final_name_CHI, everything())
 
 ##save combined_R2.2 into excel
-write.xlsx(combined_R2.2_3, 
-           file = "combined_R2.2_Res_3.xlsx",
+write.xlsx(combined_R2.2_3,
+           file = file.path(r2_clean, "combined_R2.2_Res_3.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
@@ -802,10 +801,11 @@ rm(list=ls())
 ## MERGING R2.1 and R2.2 dataset (simple join by PID) 
 ### Remarks: no within-round var merging + fixing naming inconsistency between R2.1 & R2.2
 
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
+root     <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
+r2_clean <- file.path(root, "1_clean/R2")
 
-combined_R2.1_Res <- read_excel("combined_R2.1_Res_3.xlsx",col_names = TRUE)
-combined_R2.2_Res <- read_excel("combined_R2.2_Res_3.xlsx",col_names = TRUE)
+combined_R2.1_Res <- read_excel(file.path(r2_clean, "combined_R2.1_Res_3.xlsx"), col_names = TRUE)
+combined_R2.2_Res <- read_excel(file.path(r2_clean, "combined_R2.2_Res_3.xlsx"), col_names = TRUE)
 
 
 ##1. Make sure everything is character (avoid type issues when joining)
@@ -831,9 +831,8 @@ combined_R2_Res_1 <- combined_R2_Res_1 %>%
   rename(not_final_name_CHI = final_name_CHI) %>%
   arrange(PID)
 
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
-write.xlsx(combined_R2_Res_1, 
-           file = "combined_R2_Res_1.xlsx",
+write.xlsx(combined_R2_Res_1,
+           file = file.path(r2_clean, "combined_R2_Res_1.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
@@ -845,8 +844,7 @@ combined_R2_Res_1 %>%
 #####################################
 ## Further processing of combined_R2 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
-combined_R2_Res_2 <- read_excel("combined_R2_Res_2.xlsx", col_names = TRUE)
+combined_R2_Res_2 <- read_excel(file.path(r2_clean, "combined_R2_Res_2.xlsx"), col_names = TRUE)
 
 ## 1. Convert everything to character
 combined_R2_Res_2 <- combined_R2_Res_2 %>%
@@ -870,8 +868,8 @@ combined_R2_Res_3 <- combined_R2_Res_3 %>%
   select(round, RCHEID, PID, final_name_CHI, everything())
 
 ##save final combined_R2 into excel
-write.xlsx(combined_R2_Res_3, 
-           file = "combined_R2_Res_3.xlsx",
+write.xlsx(combined_R2_Res_3,
+           file = file.path(r2_clean, "combined_R2_Res_3.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 
@@ -894,16 +892,18 @@ rm(list=ls())
 #### Part 4. Load raw data, error repot, and all needed files
 #####################################
 #load df (same df for R2.2 and R3)
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R2/R2 and R3_Qualtric Download/20251124_withfinalvarname")
+root             <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
+r2.2_r3_qualtrics <- file.path(root, "0_raw/R2/R2.2_qualtrics")
+r3_clean         <- file.path(root, "1_clean/R3")
 
 ## 1. Read the R2 survey files (no col names, because first 3 rows are special)
-resident1_raw <- read_excel("Resident1_finalvar.xlsx", col_names = FALSE)
-resident2_raw <- read_excel("Resident2_finalvar.xlsx", col_names = FALSE)
-resident3_raw <- read_excel("Resident3_finalvar.xlsx", col_names = FALSE)
-resident4_raw <- read_excel("Resident4_finalvar.xlsx", col_names = FALSE)
-resident5_raw <- read_excel("Resident5_finalvar.xlsx", col_names = FALSE)
-resident6_raw <- read_excel("Resident6_finalvar.xlsx", col_names = FALSE)
-residentMC_raw <- read_excel("ResidentMC_finalvar.xlsx", col_names = FALSE)
+resident1_raw  <- read_excel(file.path(r2.2_r3_qualtrics, "Resident1_finalvar.xlsx"), col_names = FALSE)
+resident2_raw  <- read_excel(file.path(r2.2_r3_qualtrics, "Resident2_finalvar.xlsx"), col_names = FALSE)
+resident3_raw  <- read_excel(file.path(r2.2_r3_qualtrics, "Resident3_finalvar.xlsx"), col_names = FALSE)
+resident4_raw  <- read_excel(file.path(r2.2_r3_qualtrics, "Resident4_finalvar.xlsx"), col_names = FALSE)
+resident5_raw  <- read_excel(file.path(r2.2_r3_qualtrics, "Resident5_finalvar.xlsx"), col_names = FALSE)
+resident6_raw  <- read_excel(file.path(r2.2_r3_qualtrics, "Resident6_finalvar.xlsx"), col_names = FALSE)
+residentMC_raw <- read_excel(file.path(r2.2_r3_qualtrics, "ResidentMC_finalvar.xlsx"), col_names = FALSE)
 
 #####################################
 #### Part 5. Correct raw data according to error repot
@@ -1030,8 +1030,8 @@ combined_R3 <- combined_R3 %>%
 
 setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R3")
 
-write.xlsx(combined_R3, 
-           file = "combined_R3_Res_1.xlsx",
+write.xlsx(combined_R3,
+           file = file.path(r3_clean, "combined_R3_Res_1.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
 ##QC
@@ -1044,9 +1044,7 @@ sum(duplicated(combined_R3[[id_var]]))
 #####################################
 ## Further processing of combined_R3 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R3")
-
-combined_R3_2 <- read_excel("combined_R3_Res_2.xlsx", col_names = TRUE)
+combined_R3_2 <- read_excel(file.path(r3_clean, "combined_R3_Res_2.xlsx"), col_names = TRUE)
 
 ## 1. Convert everything to character
 combined_R3_2 <- combined_R3_2 %>%
@@ -1070,12 +1068,10 @@ combined_R3_3 <- combined_R3_3 %>%
   select(round, RCHEID, PID, final_name_CHI, everything())
 
 ##save combined_R3 into excel
-setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R3")
-write.xlsx(combined_R3_3, 
-           file = "combined_R3_Res_3.xlsx",
+write.xlsx(combined_R3_3,
+           file = file.path(r3_clean, "combined_R3_Res_3.xlsx"),
            colNames = TRUE,
            rowNames = FALSE)
-
 ##QC # Not more duplicates
 combined_R3_3 %>%
   count(PID) %>%     # count how many times each PID appears
