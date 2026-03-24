@@ -217,9 +217,9 @@ combined_R1_Staf_3 <- combined_R1_Staf_3 %>%
 
 ## save combined_R1_Staf_3 into excel
 write.xlsx(combined_R1_Staf_3,
-           file      = file.path(r1_clean, "combined_R1_Staf_3.xlsx"),
-           colNames  = TRUE,
-           rowNames  = FALSE)
+           file     = file.path(all_rounds_staff, "combined_R1_Staf_3.xlsx"),
+           colNames = TRUE,
+           rowNames = FALSE)
 
 ################################################################################
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
@@ -544,9 +544,9 @@ combined_R2_Staf <- combined_R2_Staf %>%
 
 ## save combined_R2_Staf into excel
 write.xlsx(combined_R2_Staf,
-           file      = file.path(r2_clean, "combined_R2_Staf.xlsx"),
-           colNames  = TRUE,
-           rowNames  = FALSE)
+           file     = file.path(all_rounds_staff, "combined_R2_Staf.xlsx"),
+           colNames = TRUE,
+           rowNames = FALSE)
 
 ################################################################################
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
@@ -564,6 +564,7 @@ rm(list=ls())
 root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
 r3_qualtrics <- file.path(root, "0_raw/R3/qualtrics")
 r3_clean     <- file.path(root, "1_clean/R3")
+all_rounds_staff <- file.path(root, "1_clean/all_rounds/staff")
 
 ## 1. Read the R3 survey files (no col names, because first 3 rows are special)
 staff1_raw   <- read_excel(file.path(r3_qualtrics, "Staff1_finalvar.xlsx"),   col_names = FALSE)
@@ -700,9 +701,9 @@ combined_R3_3 <- combined_R3_3 %>%
 
 ## save combined_R3_Staf_3 into excel
 write.xlsx(combined_R3_3,
-           file      = file.path(r3_clean, "combined_R3_Staf_3.xlsx"),
-           colNames  = TRUE,
-           rowNames  = FALSE)
+           file     = file.path(all_rounds_staff, "combined_R3_Staf_3.xlsx"),
+           colNames = TRUE,
+           rowNames = FALSE)
 
 ##QC
 combined_R3_3 %>%
