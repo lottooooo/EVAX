@@ -1,6 +1,6 @@
 #############
 #PRINTING - line number
-root    <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root    <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 scripts <- file.path(root, "scripts")
 
 lines <- readLines(file.path(scripts, "Resident_Part1-9.R"))
@@ -18,7 +18,7 @@ html_content <- paste0(
 writeLines(html_content, file.path(scripts, "Resident_Part1-9.R.html"))
 ###########
 
-root <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 
 #####################################
 #### Part 1.  Coding consensus
@@ -330,7 +330,7 @@ unique(combined_R1_Res_1$PID[duplicated(combined_R1_Res_1$PID)])
 ## Further processing of combined_R1_2 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
 rm(list=ls())
-root <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r1_clean <- file.path(root, "1_clean/R1")
 
 combined_R1_Res_2 <- read_excel(file.path(r1_clean, "combined_R1_Res_2.xlsx"), col_names = TRUE)
@@ -386,7 +386,7 @@ rm(list=ls())
 #### Part 4. Load raw data, error repot, and all needed files
 #####################################
 
-root          <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root          <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r2.1_qualtrics <- file.path(root, "0_raw/R2/R2.1_qualtrics")
 
 ## 1. Read the R2.1 survey files (no col names, because first 3 rows are special)
@@ -542,7 +542,7 @@ rm(list=ls())
 #####################################
 #### Part 4. Load raw data, error repot, and all needed files
 #####################################
-root            <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root            <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r2.2_qualtrics  <- file.path(root, "0_raw/R2/R2.2_qualtrics")
 r2_clean        <- file.path(root, "1_clean/R2")
 
@@ -802,7 +802,7 @@ rm(list=ls())
 ## MERGING R2.1 and R2.2 dataset (simple join by PID) 
 ### Remarks: no within-round var merging + fixing naming inconsistency between R2.1 & R2.2
 
-root     <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root     <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r2_clean <- file.path(root, "1_clean/R2")
 
 combined_R2.1_Res <- read_excel(file.path(r2_clean, "combined_R2.1_Res_3.xlsx"), col_names = TRUE)
@@ -893,7 +893,7 @@ rm(list=ls())
 #### Part 4. Load raw data, error repot, and all needed files
 #####################################
 #load df (same df for R2.2 and R3)
-root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r2.2_r3_qualtrics <- file.path(root, "0_raw/R2/R2.2_qualtrics")
 r3_clean         <- file.path(root, "1_clean/R3")
 
