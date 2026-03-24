@@ -920,7 +920,7 @@ rm(list=ls())
 ## Part 10D1: Cross-Round FINAL Master Dataset Construction
 root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
 p10d_staff   <- file.path(root, "part10/10d/staff")
-summary_docs <- file.path(root, "summary_docs")
+summary_docs <- file.path(root, "Summary docs")
 
 ## 1. Read files
 ALL_Round_wospeclog <- read_excel(file.path(p10d_staff, "STAFF_ALLRound_withoutspeclog.xlsx"),
