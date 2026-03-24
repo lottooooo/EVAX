@@ -301,7 +301,7 @@ combined_R3_RCHE_1 %>%
 #####################################
 #### Part 7. Combine datasets across rounds
 #####################################
-#CONTINUED IN PART 10D BELOW
+#CONTINUED IN PART 10D1 BELOW
 
 #####################################
 #### Part 8. Re-position columns by category and (within category) by similarity
@@ -322,10 +322,10 @@ rm(list=ls())
 #### Part 10. Variable Cleaning
 #####################################
 
-###PART 10D: ALL ROUND joining combined_R1 to R3###
+###PART 10D1: ALL ROUND joining combined_R1 to R3###
 root            <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 all_rounds_rche <- file.path(root, "1_clean/all_rounds/rche")
-p10d_rche       <- file.path(root, "part10/10d/rche")
+p10d_rche       <- file.path(root, "part10/Part10D1/rche")
 
 ## 1. Read R1-R3 clean RCHE files
 R1_raw <- read_excel(file.path(all_rounds_rche, "combined_R1_RCHE_1.xlsx"),   col_names = TRUE)
