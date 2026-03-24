@@ -1,3 +1,22 @@
+#############
+#PRINTING - line number
+setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/2. R scripts")
+lines <- readLines("Resident_Part1-9.R")
+numbered <- paste(sprintf("%3d", seq_along(lines)), lines, sep = "  ")
+cat(numbered, sep = "\n")
+
+# Wrap in HTML with a monospace font
+html_content <- paste0(
+  "<html><head><style>",
+  "body { font-family: monospace; font-size: 12pt; white-space: pre; }",
+  "</style></head><body>",
+  paste(htmltools::htmlEscape(numbered), collapse = "\n"),
+  "</body></html>"
+)
+
+writeLines(html_content, "Resident_Part1-9.R.html")
+###########
+
 #####################################
 #### Part 1.  Coding consensus
 #####################################
@@ -67,7 +86,7 @@ residentMINI_raw$`...9`[idx] <- "23" # `...9` = dob_dd
 ####Part 6.  Combine datasets within the same round in wide form
 #####################################
 
-## 2. Correct to desired colnames as header
+## 1. Correct to desired colnames as header
 #A. Qualtrics Remove statement2 from header
 #col_names = TRUE
 rm_stat2 <- function(df) {
@@ -108,7 +127,7 @@ residentADD2_clean <- header_row2(residentADD2_raw)
 residentMINI_clean <- header_row2(residentMINI_raw)
 
 
-##3 Prep 1 to join surveys within Round: convert everything to character 
+##2. Prep 1 to join surveys within Round: convert everything to character 
 #if error: names(resident3_clean)[duplicated(names(resident3_clean))]
 residentINS_clean <- residentINS_clean %>% mutate(across(everything(), as.character))
 residentMAINIADL_clean <-residentMAINIADL_clean %>% mutate(across(everything(), as.character))
@@ -120,7 +139,7 @@ residentADD2_clean <-residentADD2_clean %>% mutate(across(everything(), as.chara
 residentMINI_clean <-residentMINI_clean %>% mutate(across(everything(), as.character))
 residentNHVE_clean <-residentNHVE_raw %>% mutate(across(everything(), as.character))
 
-##4 Prep 2: make sure core joining variable are the same
+##3. Prep 2: make sure core joining variable are the same
 ##SurveyMonkey
 fullPID <- function(df) {
   df$PID <- paste0(df$RCHEID,"-1-",df$PID)
@@ -193,7 +212,7 @@ residentMINI_clean <- residentMINI_clean %>%
   rename(PID = sid) %>% 
   rename(name_CHI = cname)
 
-# 5. Prep 3: Convert format of vactype (R1 MINI) to CVD1_type, CVD2_type, etc.
+# 4. Prep 3: Convert format of vactype (R1 MINI) to CVD1_type, CVD2_type, etc.
 residentMINI_clean <- residentMINI_clean %>%
   mutate(
     CVd1_type = case_when(
@@ -242,7 +261,7 @@ residentMINI_clean <- residentMINI_clean %>%
 residentMINI_try <- residentMINI_clean %>% 
   select(PID, starts_with("CVd") & ends_with("type"))
 
-##6. Prep 4: prefix all final var names with dataset origin
+##5. Prep 4: prefix all final var names with dataset origin
 ## except for the core variable so we can still join by ID and other vars correctly
 id_var <- "PID"
 RCHEID <- "RCHEID"
@@ -250,28 +269,20 @@ name_CHI <- "name_CHI"
 
 residentINS_clean <- residentINS_clean %>%
   rename_with(~ paste0("ResidentINS.", .x), .cols = -all_of(c(id_var, RCHEID, name_CHI)))
-
 residentMAINIADL_clean <- residentMAINIADL_clean %>%
   rename_with(~ paste0("ResidentMAINIADL.", .x), .cols = -all_of(c(id_var, RCHEID, name_CHI)))
-
 residentVISVH_clean <- residentVISVH_clean %>%
   rename_with(~ paste0("ResidentVISVH.", .x), .cols = -all_of(c(id_var, RCHEID, name_CHI)))
-
 residentMC_clean <- residentMC_clean %>%
   rename_with(~ paste0("ResidentMC.", .x), .cols = -all_of(c(id_var, RCHEID, name_CHI)))
-
 residentSM_clean <- residentSM_clean %>%
   rename_with(~ paste0("ResidentSM.", .x), .cols = -all_of(c(id_var, RCHEID, name_CHI)))
-
 residentMINI_clean <- residentMINI_clean  %>%
   rename_with(~ paste0("ResidentMINI.", .x), .cols = -all_of(c(id_var, name_CHI)))
-
 residentdatacrd_clean <- residentdatacrd_clean %>%
   rename_with(~ paste0("ResidentCRD.", .x), .cols = -all_of(c(id_var)))
-
 residentADD2_clean <- residentADD2_clean %>%
   rename_with(~ paste0("ResidentADD2.", .x), .cols = -all_of(c(id_var)))
-
 residentNHVE_clean <- residentNHVE_clean %>%
   rename_with(~ paste0("ResidentNHVE.", .x), .cols = -all_of(c(id_var)))
 
@@ -312,7 +323,7 @@ sum(duplicated(combined_R1_Res_1[[id_var]]))
 
 unique(combined_R1_Res_1$PID[duplicated(combined_R1_Res_1$PID)])
 
-
+#################################
 ## Further processing of combined_R1_2 PID & name_CHI to ensure no PID duplicates as 
 ## a result of error in chinese name typing
 rm(list=ls())
@@ -490,21 +501,21 @@ combined_R2.1_2 <- combined_R2.1_2 %>%
 
 ## 2. merge together duplicated rows to one row (none of the duplicated rows overlap)
 combined_R2.1_3 <- combined_R2.1_2 %>% 
-  # 0. Remove the unwanted column
+  # A. Remove the unwanted column
   select(-name_CHI) %>% 
-  # 1. Turn blanks into NA temporarily
+  # B. Turn blanks into NA temporarily
   mutate(across(everything(), ~na_if(.x, ""))) %>% 
-  # 2. Group by PID
+  # C. Group by PID
   group_by(PID) %>% 
-  # 3. For each column, take the first non-NA value
+  # D. For each column, take the first non-NA value
   summarise(
     across(everything(), ~ first(na.omit(.x)))
   )
 
-## 4. Add new column called round
+## 3. Add new column called round
 combined_R2.1_3$round <- 2
 
-## 5. Reorder colnames to round, RCHEID, PID, name_CHI
+## 4. Reorder colnames to round, RCHEID, PID, name_CHI
 combined_R2.1_3 <- combined_R2.1_3 %>%
   select(round, RCHEID, PID, final_name_CHI, everything())
 
@@ -531,7 +542,7 @@ rm(list=ls())
 #####################################
 setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/1. Raw Data/R2/R2 and R3_Qualtric Download/20251124_withfinalvarname")
 
-## 1. Read the R2 survey files (no col names, because first 3 rows are special)
+## Read the R2 survey files (no col names, because first 3 rows are special)
 resident1_raw <- read_excel("Resident1_finalvar.xlsx", col_names = FALSE)
 resident2_raw <- read_excel("Resident2_finalvar.xlsx", col_names = FALSE)
 resident3_raw <- read_excel("Resident3_finalvar.xlsx", col_names = FALSE)
@@ -604,10 +615,10 @@ idx <- which(resident5_raw$`...20` == "E950-1-002" & resident5_raw$`...18` == 2)
 resident5_raw$`...30`[idx] <- "1954" # `...30` = dob_yyyy
 resident5_raw$`...30`[idx] <- "03" # `...30` = dob_mm
 resident5_raw$`...30`[idx] <- "26" # `...30` = dob_dd
+
 #####################################
 #### Part 6.  Combine datasets within the same round in wide form
 #####################################
-
 ## 2. Pull out the 3 header rows from a Qualtrics file to be reconstructed later
 get_header <- function(df) {
   list(
@@ -690,28 +701,18 @@ noprefix_var <- c(id_var, RCHEID, round, name_CHI)
 
 R2_resident1_clean <- R2_resident1_clean %>%
   rename_with(~ paste0("Resident1.", .x), .cols = -all_of(noprefix_var))
-
 R2_resident2_clean <- R2_resident2_clean %>%
   rename_with(~ paste0("Resident2.", .x), .cols = -all_of(noprefix_var))
-
 R2_resident3_clean <- R2_resident3_clean %>%
   rename_with(~ paste0("Resident3.", .x), .cols = -all_of(c(id_var, RCHEID, round)))
-
 R2_resident4_clean <- R2_resident4_clean %>%
   rename_with(~ paste0("Resident4.", .x), .cols = -all_of(noprefix_var))
-
-
 R2_resident5_clean <- R2_resident5_clean %>%
   rename_with(~ paste0("Resident5.", .x), .cols = -all_of(noprefix_var))
-
-
 R2_resident6_clean <- R2_resident6_clean %>%
   rename_with(~ paste0("Resident6.", .x), .cols = -all_of(noprefix_var))
-
-
 R2_residentMC_clean <- R2_residentMC_clean %>%
   rename_with(~ paste0("ResidentnMC.", .x), .cols = -all_of(noprefix_var))
-
 
 ##7 Join surveys within R2 (full join) by PID
 # full join keeps everyone in the surveys
@@ -758,13 +759,13 @@ combined_R2.2_2 <- combined_R2.2_2 %>%
 
 ## 2. merge together duplicated rows to one row (none of the duplicated rows overlap)
 combined_R2.2_3 <- combined_R2.2_2 %>% 
-  # 0. Remove the unwanted column
+  # A. Remove the unwanted column
   select(-name_CHI) %>% 
-  # 1. Turn blanks into NA temporarily
+  # B. Turn blanks into NA temporarily
   mutate(across(everything(), ~na_if(.x, ""))) %>% 
-  # 2. Group by PID
+  # C. Group by PID
   group_by(PID) %>% 
-  # 3. For each column, take the first non-NA value
+  # D. For each column, take the first non-NA value
   summarise(
     across(everything(), ~ first(na.omit(.x)))
   )
@@ -806,31 +807,21 @@ setwd("C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA/3. Clean Data/R2")
 combined_R2.1_Res <- read_excel("combined_R2.1_Res_3.xlsx",col_names = TRUE)
 combined_R2.2_Res <- read_excel("combined_R2.2_Res_3.xlsx",col_names = TRUE)
 
-# ##1. Only keep and set data colnames to final var column
-# clean_pdata <- function(df) {
-#   finalvar <- as.character(df[3,])
-#   df_woheader <- df[-(1:3), ]
-#   names(df_woheader) <- finalvar
-#   df_woheader
-# }
-# 
-# combined_R2.1_Res <- clean_pdata(combined_R2.1_Res)
-# combined_R2.2_Res <- clean_pdata(combined_R2.2_Res)
 
-##2. Make sure everything is character (avoid type issues when joining)
+##1. Make sure everything is character (avoid type issues when joining)
 combined_R2.1_Res <- combined_R2.1_Res %>%
   mutate(across(everything(), as.character))
 
 combined_R2.2_Res <- combined_R2.2_Res %>%
   mutate(across(everything(), as.character))
 
-##3. Set ID variable for joining
+##2. Set ID variable for joining
 id_var <- "PID"
 RCHEID <- "RCHEID"
 round <- "round"
 final_name_CHI <- "final_name_CHI"
 
-##4. Join R2.1 and R2.2 side by side by PID (keep anyone who did at least one)
+##3. Join R2.1 and R2.2 side by side by PID (keep anyone who did at least one)
 combined_R2_Res_1 <- full_join(combined_R2.1_Res,
                              combined_R2.2_Res,
                              by = c(round, RCHEID, id_var, final_name_CHI))
@@ -863,13 +854,13 @@ combined_R2_Res_2 <- combined_R2_Res_2 %>%
 
 ## 2. merge together duplicated rows to one row (none of the duplicated rows overlap)
 combined_R2_Res_3 <- combined_R2_Res_2 %>% 
-  # 0. Remove the unwanted column
+  # A. Remove the unwanted column
   select(-not_final_name_CHI) %>% 
-  # 1. Turn blanks into NA temporarily
+  # B. Turn blanks into NA temporarily
   mutate(across(everything(), ~na_if(.x, ""))) %>% 
-  # 2. Group by PID
+  # C. Group by PID
   group_by(PID) %>% 
-  # 3. For each column, take the first non-NA value
+  # D. For each column, take the first non-NA value
   summarise(
     across(everything(), ~ first(na.omit(.x)))
   )
@@ -913,7 +904,6 @@ resident4_raw <- read_excel("Resident4_finalvar.xlsx", col_names = FALSE)
 resident5_raw <- read_excel("Resident5_finalvar.xlsx", col_names = FALSE)
 resident6_raw <- read_excel("Resident6_finalvar.xlsx", col_names = FALSE)
 residentMC_raw <- read_excel("ResidentMC_finalvar.xlsx", col_names = FALSE)
-
 
 #####################################
 #### Part 5. Correct raw data according to error repot
@@ -966,7 +956,7 @@ resident5_clean <- resident5_clean %>% mutate(across(everything(), as.character)
 resident6_clean <- resident6_clean %>% mutate(across(everything(), as.character))
 residentMC_clean <- residentMC_clean %>% mutate(across(everything(), as.character))
 
-## 4A. Include only Round 2 Participants
+##4A. Include only Round 2 Participants
 R3_resident1_clean <- resident1_clean %>% filter(round == '3')
 R3_resident2_clean <- resident2_clean %>% filter(round == '3')
 R3_resident3_clean <- resident3_clean %>% filter(round == '3')
@@ -1005,28 +995,18 @@ noprefix_var <- c(id_var, RCHEID, round, name_CHI)
 
 R3_resident1_clean <- R3_resident1_clean %>%
   rename_with(~ paste0("Resident1.", .x), .cols = -all_of(noprefix_var))
-
 R3_resident2_clean <- R3_resident2_clean %>%
   rename_with(~ paste0("Resident2.", .x), .cols = -all_of(noprefix_var))
-
 R3_resident3_clean <- R3_resident3_clean %>%
   rename_with(~ paste0("Resident3.", .x), .cols = -all_of(c(id_var, RCHEID, round)))
-
 R3_resident4_clean <- R3_resident4_clean %>%
   rename_with(~ paste0("Resident4.", .x), .cols = -all_of(noprefix_var))
-
-
 R3_resident5_clean <- R3_resident5_clean %>%
   rename_with(~ paste0("Resident5.", .x), .cols = -all_of(noprefix_var))
-
-
 R3_resident6_clean <- R3_resident6_clean %>%
   rename_with(~ paste0("Resident6.", .x), .cols = -all_of(noprefix_var))
-
-
 R3_residentMC_clean <- R3_residentMC_clean %>%
   rename_with(~ paste0("ResidentnMC.", .x), .cols = -all_of(noprefix_var))
-
 
 ##7 Join surveys within R3 (full join) by PID
 #full join keeps everyone in the surveys
@@ -1054,8 +1034,6 @@ write.xlsx(combined_R3,
            file = "combined_R3_Res_1.xlsx",
            colNames = TRUE,
            rowNames = FALSE)
-
-
 ##QC
 combined_R3 %>%
   count(PID) %>%     # count how many times each PID appears
@@ -1076,13 +1054,13 @@ combined_R3_2 <- combined_R3_2 %>%
 
 ## 2. merge together duplicated rows to one row (none of the duplicated rows overlap)
 combined_R3_3 <- combined_R3_2 %>% 
-  # 0. Remove the unwanted column
+  # A. Remove the unwanted column
   select(-name_CHI) %>% 
-  # 1. Turn blanks into NA temporarily
+  # B. Turn blanks into NA temporarily
   mutate(across(everything(), ~na_if(.x, ""))) %>% 
-  # 2. Group by PID
+  # C. Group by PID
   group_by(PID) %>% 
-  # 3. For each column, take the first non-NA value
+  # D. For each column, take the first non-NA value
   summarise(
     across(everything(), ~ first(na.omit(.x)))
   )
