@@ -1,3 +1,23 @@
+#############
+#PRINTING - line number
+root    <- "C:/Users/OrielTsao/Desktop/COVID19_RCHEs/data"
+scripts <- file.path(root, "scripts")
+lines <- readLines(file.path(scripts, "Staff_Part1-10D1.R"))
+numbered <- paste(sprintf("%3d", seq_along(lines)), lines, sep = "  ")
+cat(numbered, sep = "\n")
+
+# Wrap in HTML with a monospace font
+html_content <- paste0(
+  "<html><head><style>",
+  "body { font-family: monospace; font-size: 12pt; white-space: pre; }",
+  "</style></head><body>",
+  paste(htmltools::htmlEscape(numbered), collapse = "\n"),
+  "</body></html>"
+)
+writeLines(html_content, file.path(scripts, "Staff_Part1-10D1.R.html"))
+###########
+
+
 #####################################
 #### Part 1.  Coding consensus
 #####################################
