@@ -1088,4 +1088,14 @@ sum(duplicated(combined_R3_3[[id_var]]))
 #####################################
 #NOT APPLICABLE for RESIDENTS (due to R1 issue resolved in Part 10)
 
+#####################################
+#### Part 8. Re-position columns by category and (within category) by similarity
+#####################################
+#NOT APPLICABLE, native format in survey already by category
+
+#####################################
+#### Part 9.  Prior validation for separate files
+#####################################
+# Vetting condcted in EXCEL
+
 ##END of Part 1 - 9 
