@@ -1,6 +1,6 @@
 #############
 #PRINTING - line number
-root    <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root    <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 scripts <- file.path(root, "scripts")
 lines <- readLines(file.path(scripts, "Staff_Part1-10D1.R"))
 numbered <- paste(sprintf("%3d", seq_along(lines)), lines, sep = "  ")
@@ -51,7 +51,7 @@ rm(list=ls())
 #####################################
 #### Part 4. Load raw data, error report, and all needed files
 #####################################
-root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r1_qualtrics <- file.path(root, "0_raw/R1/qualtrics")
 r1_other     <- file.path(root, "0_raw/R1/other")
 r1_clean     <- file.path(root, "1_clean/R1")
@@ -234,7 +234,7 @@ rm(list=ls())
 #####################################
 #### Part 4. Load raw data, error report, and all needed files
 #####################################
-root           <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root           <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r2.1_qualtrics <- file.path(root, "0_raw/R2/R2.1_qualtrics")
 r2_clean       <- file.path(root, "1_clean/R2")
 
@@ -332,7 +332,7 @@ rm(list=ls())
 #####################################
 #### Part 4. Load raw data, error report, and all needed files
 #####################################
-root           <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root           <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r2.2_qualtrics <- file.path(root, "0_raw/R2/R2.2_qualtrics")
 r2_clean       <- file.path(root, "1_clean/R2")
 
@@ -492,7 +492,7 @@ write.xlsx(combined_R2.2_3,
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
 
-root     <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root     <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r2_clean <- file.path(root, "1_clean/R2")
 
 combined_R2.1_Staf <- read_excel(file.path(r2_clean, "combined_R2.1_Staf_1.xlsx"), col_names = TRUE)
@@ -518,7 +518,7 @@ rm(list=ls())
 #####################################
 #### Part 6 CONTINUE.  Combine datasets within the same round in wide form
 #####################################
-root     <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root     <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r2_clean <- file.path(root, "1_clean/R2")
 
 combined_R2.1_Staf <- read_excel(file.path(r2_clean, "combined_R2.1_Staf_1.xlsx"), col_names = TRUE)
@@ -561,7 +561,7 @@ rm(list=ls())
 #####################################
 #### Part 4. Load raw data, error report, and all needed files
 #####################################
-root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 r3_qualtrics <- file.path(root, "0_raw/R3/qualtrics")
 r3_clean     <- file.path(root, "1_clean/R3")
 all_rounds_staff <- file.path(root, "1_clean/all_rounds/staff")
@@ -720,7 +720,7 @@ rm(list=ls())
 #####################################
 #### Part 7. Combine datasets across rounds
 #####################################
-root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 all_rounds_staff <- file.path(root, "1_clean/all_rounds/staff")
 p10d_staff       <- file.path(root, "part10/10d/staff")
 
@@ -769,7 +769,7 @@ write.xlsx(ALLRound,
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
 
-root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 all_rounds_staff <- file.path(root, "1_clean/all_rounds/staff")
 
 ## 1. Read R1-R3 clean staff files
@@ -834,7 +834,7 @@ length(unique(R3$PID))
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
 
-root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 all_rounds_staff <- file.path(root, "1_clean/all_rounds/staff")
 
 ## 1. Read R1
@@ -864,7 +864,7 @@ overlap_PID_R1 <- tibble(PID = intersect(R1_Staff_PID, R1_MINI_PID))
 ####### REMOVE ALL OBJECTS IN WORKPLACE ########
 rm(list=ls())
 
-root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root             <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 all_rounds_staff <- file.path(root, "1_clean/all_rounds/staff")
 
 ## 1. Read R2
@@ -918,7 +918,7 @@ overlap_PID_R2.1_Staff2.2 <- tibble(PID = intersect(R2.1_Staff_PID, R2.2_Staff2.
 rm(list=ls())
 
 ## Part 10D1: Cross-Round FINAL Master Dataset Construction
-root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/data"
+root         <- "C:/Users/OrielTsao/Desktop/COVID-19 RCHEs/DATA"
 p10d_staff   <- file.path(root, "part10/10d/staff")
 summary_docs <- file.path(root, "Summary docs")
 
